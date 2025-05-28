@@ -16,7 +16,7 @@ class Empleado:
 class NodoEmpleado:
     def __init__(self, empleado):
         # Valida que el argumento sea un objeto Empleado
-        if not isinstance(empleado, Empleado):
+        if not isinstance(empleado, Empleado):   #insistance verifica el tipo de un objeto
             raise TypeError("Debe recibir un objeto Empleado.")
         self.empleado = empleado           # Objeto Empleado asociado al nodo
         self.subordinados = []             # Lista de nodos subordinados

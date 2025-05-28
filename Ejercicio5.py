@@ -22,7 +22,7 @@ class Servidor:
 # ----- Calcula la distancia euclidiana entre dos ubicaciones -----
 def distancia(lat1, lon1, lat2, lon2):
     # Fórmula simple para distancia en un plano (no es la distancia real sobre la Tierra)
-    return math.sqrt((lat1 - lat2)**2 + (lon1 - lon2)**2)
+    return math.sqrt((lat1 - lat2)**2 + (lon1 - lon2)**2) 
 
 # ----- Busca los k servidores más cercanos a una ubicación dada -----
 def servidores_mas_cercanos(raiz, lat_user, lon_user, k=3):
@@ -60,7 +60,7 @@ def obtener_ruta(servidor):
 # ----- Muestra el árbol de servidores en un Treeview de Tkinter -----
 def mostrar_arbol(tree, nodo, parent=""):
     # Inserta el nodo actual en el Treeview
-    item_id = tree.insert(parent, "end", text=nodo.nombre,
+    item_id = tree.insert(parent, "end", text=nodo.nombre,   # insert añade un nuevo nodo
                           values=(nodo.latitud, nodo.longitud))
     # Llama recursivamente para cada hijo
     for hijo in nodo.hijos:

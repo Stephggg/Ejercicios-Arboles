@@ -9,21 +9,61 @@ decision_tree = {
             "¿La pantalla muestra imagen?": {
                 "Sí": {
                     "¿El sonido funciona?": {
-                        "Sí": "El dispositivo funciona correctamente.",
-                        "No": "Revisar altavoces o configuración de sonido."
+                        "Sí": {
+                            "¿El dispositivo se conecta a internet?": {
+                                "Sí": "El dispositivo funciona correctamente.",
+                                "No": {
+                                    "¿El WiFi está activado?": {
+                                        "Sí": {
+                                            "¿Otras redes están disponibles?": {
+                                                "Sí": "Revisar configuración de red o contactar al proveedor de internet.",
+                                                "No": "Revisar el router o la señal WiFi."
+                                            }
+                                        },
+                                        "No": "Activar el WiFi desde la configuración del dispositivo."
+                                    }
+                                }
+                            }
+                        },
+                        "No": {
+                            "¿El volumen está subido y no está en silencio?": {
+                                "Sí": "Revisar altavoces o configuración de sonido.",
+                                "No": "Subir el volumen y quitar el silencio."
+                            }
+                        }
                     }
                 },
                 "No": {
                     "¿La pantalla está iluminada?": {
-                        "Sí": "Revisar conexión de video o tarjeta gráfica.",
-                        "No": "Revisar retroiluminación o fuente de alimentación de la pantalla."
+                        "Sí": {
+                            "¿Se ve alguna imagen tenue o parpadeante?": {
+                                "Sí": "Revisar la conexión de video o la tarjeta gráfica.",
+                                "No": "Revisar el brillo de la pantalla o intentar con un monitor externo."
+                            }
+                        },
+                        "No": {
+                            "¿El indicador de encendido está prendido?": {
+                                "Sí": "Revisar retroiluminación o fuente de alimentación de la pantalla.",
+                                "No": "Posible problema de hardware en la pantalla o la placa base."
+                            }
+                        }
                     }
                 }
             }
         },
         "No": {
             "¿Está conectado a la corriente?": {
-                "Sí": "Revisar batería o fuente de alimentación.",
+                "Sí": {
+                    "¿El cargador muestra luz o indicador?": {
+                        "Sí": "Revisar batería o fuente de alimentación interna.",
+                        "No": {
+                            "¿El enchufe funciona con otros dispositivos?": {
+                                "Sí": "Reemplazar el cargador.",
+                                "No": "Revisar la toma de corriente o usar otra."
+                            }
+                        }
+                    }
+                },
                 "No": "Conectar el dispositivo a la corriente."
             }
         }

@@ -150,6 +150,42 @@ class ArbolGenealogicoApp(tk.Tk):
         self.combo_madre.set("")
         self.actualizar_comboboxes()
 
+    def buscar_hermanos(self, persona):
+        # Devuelve una lista de hermanos (excluyendo a la persona misma)
+        hermanos = []
+        for p in self.personas.values():
+            if p is not persona and p.padre == persona.padre and p.madre == persona.madre and (p.padre or p.madre):
+                hermanos.append(p.nombre)
+        return hermanos
+
+    def mostrar_arbol(self, persona):
+        # Construye el árbol desde la persona seleccionada hacia los ancestros,
+        # de modo que la persona seleccionada tenga la mayor indentación.
+        def construir_cadena(persona, nivel=0, visitados=None):
+            if not persona or (visitados and persona.nombre in visitados):
+                return []
+            if visitados is None:
+                visitados = set()
+            visitados.add(persona.nombre)
+            ramas = []
+            # Primero sube a los ancestros
+            if persona.padre:
+                ramas += construir_cadena(persona.padre, nivel + 1, visitados)
+            if persona.madre:
+                ramas += construir_cadena(persona.madre, nivel + 1, visitados)
+            # Luego agrega la persona actual
+            linea = f"{'    ' * nivel}- {persona.nombre}"
+            # Agrega hermanos si existen
+            hermanos = self.buscar_hermanos(persona)
+            if hermanos:
+                linea += " (Hermanos: " + ", ".join(hermanos) + ")"
+            ramas.append(linea)
+            return ramas
+
+        # Invierte el resultado para mostrar de ancestro antiguo a reciente
+        resultado = construir_cadena(persona, nivel=0)
+        return resultado
+
     def buscar_ancestros(self):
         # Obtiene la persona y la generación seleccionada
         nombre = self.combo_persona.get()
@@ -159,23 +195,17 @@ class ArbolGenealogicoApp(tk.Tk):
         if not nombre:
             messagebox.showerror("Error", "Seleccione una persona.")
             return
-        if not generacion_str.isdigit() or int(generacion_str) < 1:
-            messagebox.showerror("Error", "Ingrese una generación válida (número entero mayor a 0).")
-            return
 
-        generacion = int(generacion_str)
         persona = self.personas.get(nombre)
 
-        # Busca los ancestros
-        ancestros = encontrar_ancestros(persona, generacion)
-
-        # Muestra los resultados en la lista
+        # Muestra el árbol completo a partir de la persona seleccionada
         self.lista_resultados.delete(0, tk.END)
-        if ancestros:
-            for ancestro in ancestros:
-                self.lista_resultados.insert(tk.END, ancestro)
+        if persona:
+            arbol = self.mostrar_arbol(persona)
+            for linea in arbol:
+                self.lista_resultados.insert(tk.END, linea)
         else:
-            self.lista_resultados.insert(tk.END, "No se encontraron ancestros en esa generación.")
+            self.lista_resultados.insert(tk.END, "No se encontró la persona.")
 
 # Punto de entrada principal
 if __name__ == "__main__":
