@@ -103,41 +103,87 @@ def mostrar_resultados():
 
 # --- Creación de la ventana principal ---
 ventana = tk.Tk()
-ventana.title("Buscador de Etiquetas HTML")
-ventana.geometry("540x430")
+ventana.title("🔎 Buscador de Etiquetas HTML")
+ventana.geometry("600x480")
 ventana.resizable(False, False)
-ventana.configure(bg="#f0f4f8")
+ventana.configure(bg="#f7fafc")
 
 # --- Título de la ventana ---
-titulo = tk.Label(ventana, text="Buscador de Etiquetas en Árbol HTML", font=("Arial", 16, "bold"), bg="#f0f4f8", fg="#333")
-titulo.pack(pady=15)
+titulo = tk.Label(
+    ventana,
+    text="🌐 Buscador de Etiquetas en Árbol HTML",
+    font=("Segoe UI", 18, "bold"),
+    bg="#dbeafe",
+    fg="#1e293b",
+    pady=16
+)
+titulo.pack(fill="x")
 
 # --- Marco para la entrada y el botón ---
-frame_entrada = tk.Frame(ventana, bg="#f0f4f8")
-frame_entrada.pack(pady=10)
+frame_entrada = tk.Frame(ventana, bg="#f7fafc")
+frame_entrada.pack(pady=18)
 
-# Etiqueta para el campo de entrada
-lbl_etiqueta = tk.Label(frame_entrada, text="Nombre de la etiqueta:", font=("Arial", 12), bg="#f0f4f8")
-lbl_etiqueta.grid(row=0, column=0, padx=5, pady=5)
+lbl_etiqueta = tk.Label(
+    frame_entrada,
+    text="Etiqueta a buscar:",
+    font=("Segoe UI", 12),
+    bg="#f7fafc",
+    fg="#334155"
+)
+lbl_etiqueta.grid(row=0, column=0, padx=7, pady=5)
 
-# Campo de entrada para el nombre de la etiqueta
-entrada_etiqueta = ttk.Entry(frame_entrada, font=("Arial", 12), width=20)
-entrada_etiqueta.grid(row=0, column=1, padx=5, pady=5)
+entrada_etiqueta = ttk.Entry(frame_entrada, font=("Segoe UI", 12), width=22)
+entrada_etiqueta.grid(row=0, column=1, padx=7, pady=5)
 
-# Botón para buscar la etiqueta
-btn_buscar = ttk.Button(frame_entrada, text="Buscar", command=mostrar_resultados)
-btn_buscar.grid(row=0, column=2, padx=5, pady=5)
+btn_buscar = tk.Button(
+    frame_entrada,
+    text="Buscar",
+    command=mostrar_resultados,
+    bg="#2563eb",
+    fg="white",
+    font=("Segoe UI", 11, "bold"),
+    relief="flat",
+    cursor="hand2",
+    activebackground="#1d4ed8",
+    activeforeground="white"
+)
+btn_buscar.grid(row=0, column=2, padx=7, pady=5)
+
+# --- Línea divisoria ---
+tk.Frame(ventana, height=2, bg="#cbd5e1").pack(fill="x", pady=8)
 
 # --- Área de resultados ---
-lbl_resultados = tk.Label(ventana, text="Resultados:", font=("Arial", 12, "bold"), bg="#f0f4f8")
-lbl_resultados.pack(pady=(20, 5))
+lbl_resultados = tk.Label(
+    ventana,
+    text="Resultados de la búsqueda:",
+    font=("Segoe UI", 13, "bold"),
+    bg="#f7fafc",
+    fg="#0f172a"
+)
+lbl_resultados.pack(pady=(10, 3))
 
 # Caja de texto para mostrar los resultados de la búsqueda
-texto_resultados = tk.Text(ventana, height=13, width=65, font=("Consolas", 11), state='disabled', bg="#e9ecef")
-texto_resultados.pack(pady=5)
+texto_resultados = tk.Text(
+    ventana,
+    height=14,
+    width=70,
+    font=("Consolas", 11),
+    state='disabled',
+    bg="#e0e7ef",
+    fg="#1e293b",
+    bd=1,
+    relief="solid"
+)
+texto_resultados.pack(pady=5, padx=12)
 
 # --- Pie de página ---
-footer = tk.Label(ventana, text="Ejercicio 8 - Estructura de Documento HTML/XML", font=("Arial", 9), bg="#f0f4f8", fg="#888")
+footer = tk.Label(
+    ventana,
+    text="Ejercicio 8 - Estructura de Documento HTML/XML",
+    font=("Segoe UI", 9, "italic"),
+    bg="#f7fafc",
+    fg="#64748b"
+)
 footer.pack(side="bottom", pady=10)
 
 # --- Iniciar el bucle principal de la interfaz ---

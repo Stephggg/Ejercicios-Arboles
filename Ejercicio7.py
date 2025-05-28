@@ -65,20 +65,17 @@ id_map = {}
 
 def crear_interfaz():
     def mostrar_todo_en_treeview(tree, nodo, padre_id=""):
-        # Inserta el nodo en el Treeview
         nodo_id = tree.insert(padre_id, "end", text=nodo.nombre, open=True)
-        id_map[nodo_id] = nodo  # Guarda referencia al nodo real
-        for hijo in nodo.hijos:  # Inserta recursivamente los hijos
+        id_map[nodo_id] = nodo
+        for hijo in nodo.hijos:
             mostrar_todo_en_treeview(tree, hijo, nodo_id)
 
     def actualizar_info(nodo):
-        # Muestra ruta completa y cantidad de subcategorías
         ruta = obtener_ruta_completa(nodo)
         cantidad = len(nodo.hijos)
         resultado_texto.set(f"Ruta: {ruta}\nSubcategorías: {cantidad}")
 
     def al_seleccionar(event):
-        # Evento al hacer clic en un ítem del árbol
         item = tree.focus()
         if item:
             nodo = id_map.get(item)
@@ -86,7 +83,6 @@ def crear_interfaz():
                 actualizar_info(nodo)
 
     def buscar_categoria():
-        # Función de búsqueda parcial desde la entrada
         entrada = entrada_busqueda.get().strip()
         if not entrada:
             messagebox.showwarning("Entrada vacía", "Por favor escribe una categoría.")
@@ -99,84 +95,97 @@ def crear_interfaz():
             messagebox.showinfo("Resultados encontrados", f"Coincidencias:\n{sugerencias}")
 
     def agregar_categoria():
-        # Agrega una nueva categoría bajo un nodo existente
         padre_nombre = entrada_padre.get().strip()
         nueva_nombre = entrada_nueva.get().strip()
-
         if not padre_nombre or not nueva_nombre:
             messagebox.showwarning("Datos incompletos", "Completa ambos campos.")
             return
-
         resultados = buscar_nodos_por_nombre(arbol_raiz, padre_nombre)
         if not resultados:
             messagebox.showerror("Padre no encontrado", f"No se encontró la categoría '{padre_nombre}'.")
             return
-
         nuevo_nodo = Nodo(nueva_nombre)
         resultados[0].agregar_subcategoria(nuevo_nodo)
-
-        # Refresca el árbol visual
         tree.delete(*tree.get_children())
         mostrar_todo_en_treeview(tree, arbol_raiz)
         messagebox.showinfo("Éxito", f"Se agregó '{nueva_nombre}' bajo '{padre_nombre}'.")
 
-    # Crear ventana principal
+    # Ventana principal
     ventana = tk.Tk()
     ventana.title("Árbol de Categorías de Productos")
-    ventana.geometry("700x500")
+    ventana.geometry("800x600")
+    ventana.configure(bg="#F7F9FB")
 
-    # Encabezado bonito del sistema
+    # Encabezado
     encabezado = tk.Label(
         ventana,
         text="🌟 Sistema de Categorías de Productos 🌟",
-        font=("Helvetica", 18, "bold"),
-        fg="#2C3E50",
-        bg="#ECF0F1",
-        pady=15
+        font=("Segoe UI", 20, "bold"),
+        fg="#34495E",
+        bg="#D6EAF8",
+        pady=18
     )
     encabezado.pack(fill="x")
+
+    # Marco principal con borde y fondo
+    marco_principal = tk.Frame(ventana, bg="#F7F9FB", bd=2, relief="groove")
+    marco_principal.pack(padx=20, pady=15, fill="both", expand=True)
 
     # Estilo moderno
     estilo = ttk.Style(ventana)
     estilo.theme_use("clam")
-    estilo.configure("Treeview", font=("Arial", 11), rowheight=25)
+    estilo.configure("Treeview", font=("Segoe UI", 12), rowheight=28, background="#FDFEFE", fieldbackground="#FDFEFE")
+    estilo.configure("Treeview.Heading", font=("Segoe UI", 13, "bold"), background="#5DADE2", foreground="white")
+    estilo.map("Treeview", background=[("selected", "#AED6F1")])
 
     # Sección superior: búsqueda
-    frame_top = tk.Frame(ventana)
-    frame_top.pack(pady=10)
+    frame_top = tk.Frame(marco_principal, bg="#F7F9FB")
+    frame_top.pack(pady=10, fill="x")
+    tk.Label(frame_top, text="🔎 Buscar categoría:", font=("Segoe UI", 12), bg="#F7F9FB").grid(row=0, column=0, sticky="w")
+    entrada_busqueda = tk.Entry(frame_top, font=("Segoe UI", 12), width=30, bg="#EBF5FB")
+    entrada_busqueda.grid(row=0, column=1, padx=7)
+    tk.Button(frame_top, text="Buscar", command=buscar_categoria, bg="#2980B9", fg="white", font=("Segoe UI", 11, "bold"), relief="flat", cursor="hand2").grid(row=0, column=2, padx=5)
 
-    tk.Label(frame_top, text="Buscar categoría:", font=("Arial", 12)).grid(row=0, column=0)
-    entrada_busqueda = tk.Entry(frame_top, font=("Arial", 12), width=30)
-    entrada_busqueda.grid(row=0, column=1, padx=5)
-    tk.Button(frame_top, text="Buscar", command=buscar_categoria, bg="#007ACC", fg="white").grid(row=0, column=2)
+    # Línea divisoria
+    tk.Frame(marco_principal, height=2, bg="#D6DBDF").pack(fill="x", pady=8)
 
     # Sección de agregar categoría
-    frame_agregar = tk.Frame(ventana)
-    frame_agregar.pack(pady=10)
-
-    tk.Label(frame_agregar, text="Pertenece a:", font=("Arial", 12)).grid(row=0, column=0)
-    entrada_padre = tk.Entry(frame_agregar, font=("Arial", 12), width=20)
+    frame_agregar = tk.Frame(marco_principal, bg="#F7F9FB")
+    frame_agregar.pack(pady=10, fill="x")
+    tk.Label(frame_agregar, text="📂 Pertenece a:", font=("Segoe UI", 12), bg="#F7F9FB").grid(row=0, column=0, sticky="e")
+    entrada_padre = tk.Entry(frame_agregar, font=("Segoe UI", 12), width=18, bg="#EBF5FB")
     entrada_padre.grid(row=0, column=1, padx=5)
-
-    tk.Label(frame_agregar, text="Nueva categoría:", font=("Arial", 12)).grid(row=0, column=2)
-    entrada_nueva = tk.Entry(frame_agregar, font=("Arial", 12), width=20)
+    tk.Label(frame_agregar, text="➕ Nueva categoría:", font=("Segoe UI", 12), bg="#F7F9FB").grid(row=0, column=2, sticky="e")
+    entrada_nueva = tk.Entry(frame_agregar, font=("Segoe UI", 12), width=18, bg="#EBF5FB")
     entrada_nueva.grid(row=0, column=3, padx=5)
+    tk.Button(frame_agregar, text="Agregar", command=agregar_categoria, bg="#27AE60", fg="white", font=("Segoe UI", 11, "bold"), relief="flat", cursor="hand2").grid(row=0, column=4, padx=8)
 
-    tk.Button(frame_agregar, text="Agregar", command=agregar_categoria, bg="#28A745", fg="white").grid(row=0, column=4, padx=5)
+    # Línea divisoria
+    tk.Frame(marco_principal, height=2, bg="#D6DBDF").pack(fill="x", pady=8)
 
     # Árbol visual interactivo
-    tree = ttk.Treeview(ventana)
+    tree_frame = tk.Frame(marco_principal, bg="#F7F9FB")
+    tree_frame.pack(fill="both", expand=True, pady=5)
+    tree_scroll = tk.Scrollbar(tree_frame)
+    tree_scroll.pack(side="right", fill="y")
+    tree = ttk.Treeview(tree_frame, yscrollcommand=tree_scroll.set)
     tree.pack(fill="both", expand=True)
+    tree_scroll.config(command=tree.yview)
     tree.bind("<<TreeviewSelect>>", al_seleccionar)
 
     # Texto inferior para mostrar ruta y cantidad de subcategorías
     resultado_texto = tk.StringVar()
-    tk.Label(ventana, textvariable=resultado_texto, font=("Arial", 12), fg="gray").pack(pady=10)
+    info_frame = tk.Frame(marco_principal, bg="#F7F9FB")
+    info_frame.pack(pady=10, fill="x")
+    tk.Label(info_frame, textvariable=resultado_texto, font=("Segoe UI", 12, "italic"), fg="#616A6B", bg="#F7F9FB").pack()
 
     # Mostrar la estructura inicial del árbol
     mostrar_todo_en_treeview(tree, arbol_raiz)
 
-    ventana.mainloop()  # Ejecutar la ventana
+    # Mensaje de bienvenida
+    resultado_texto.set("Selecciona una categoría para ver su ruta y subcategorías.")
+
+    ventana.mainloop()
 
 # ============================
 # === FIN DE LA INTERFAZ =====

@@ -76,13 +76,25 @@ def crear_interfaz():
     def mostrar_menu_principal():
         for widget in ventana.winfo_children():
             widget.destroy()
-        tk.Label(ventana, text="Bienvenido al Sistema CDN", font=("Segoe UI", 16, "bold"), bg="#f4f6f7").pack(pady=20)
-        tk.Button(ventana, text="🔍 Buscar Servidores más Cercanos", font=("Segoe UI", 12), width=40,
-                  command=mostrar_busqueda_cercanos).pack(pady=10)
-        tk.Button(ventana, text="📌 Buscar Servidor por Nombre", font=("Segoe UI", 12), width=40,
-                  command=mostrar_busqueda_nombre).pack(pady=10)
-        tk.Button(ventana, text="🗂️ Ver Árbol de Servidores", font=("Segoe UI", 12), width=40,
-                  command=mostrar_arbol_servidores).pack(pady=10)
+        tk.Label(
+            ventana, text="🌐 Bienvenido al Sistema CDN 🌐",
+            font=("Segoe UI", 18, "bold"), bg="#e3f0fa", fg="#1976d2"
+        ).pack(pady=20)
+        tk.Button(
+            ventana, text="🔍 Buscar Servidores más Cercanos", font=("Segoe UI", 13, "bold"), width=40,
+            bg="#42a5f5", fg="white", activebackground="#1976d2", activeforeground="white",
+            relief="raised", bd=3, cursor="hand2", command=mostrar_busqueda_cercanos
+        ).pack(pady=12)
+        tk.Button(
+            ventana, text="📌 Buscar Servidor por Nombre", font=("Segoe UI", 13, "bold"), width=40,
+            bg="#66bb6a", fg="white", activebackground="#388e3c", activeforeground="white",
+            relief="raised", bd=3, cursor="hand2", command=mostrar_busqueda_nombre
+        ).pack(pady=12)
+        tk.Button(
+            ventana, text="🗂️ Ver Árbol de Servidores", font=("Segoe UI", 13, "bold"), width=40,
+            bg="#ffa726", fg="white", activebackground="#f57c00", activeforeground="white",
+            relief="raised", bd=3, cursor="hand2", command=mostrar_arbol_servidores
+        ).pack(pady=12)
 
     # ---- Pantalla para buscar los 3 servidores más cercanos a una ubicación ----
     def mostrar_busqueda_cercanos():
@@ -90,21 +102,23 @@ def crear_interfaz():
             widget.destroy()
         encabezado = tk.Label(
             ventana,
-            text="\nBuscar los 3 servidores más cercanos según tu ubicación\n",
-            font=("Segoe UI", 14, "bold"), bg="#f4f6f7"
+            text="Buscar los 3 servidores más cercanos según tu ubicación",
+            font=("Segoe UI", 15, "bold"), bg="#e3f0fa", fg="#1976d2"
         )
-        encabezado.pack(pady=5)
-        frame_inputs = tk.Frame(ventana, bg="#f4f6f7")
+        encabezado.pack(pady=10)
+        frame_inputs = tk.Frame(ventana, bg="#e3f0fa")
         frame_inputs.pack(pady=10)
-        ttk.Label(frame_inputs, text="Latitud:").grid(row=0, column=0, padx=5, pady=5)
-        entry_lat = ttk.Entry(frame_inputs)
+        ttk.Label(frame_inputs, text="Latitud:", font=("Segoe UI", 11)).grid(row=0, column=0, padx=5, pady=5, sticky="e")
+        entry_lat = ttk.Entry(frame_inputs, font=("Segoe UI", 11))
         entry_lat.grid(row=0, column=1, padx=5, pady=5)
-        ttk.Label(frame_inputs, text="Longitud:").grid(row=1, column=0, padx=5, pady=5)
-        entry_lon = ttk.Entry(frame_inputs)
+        ttk.Label(frame_inputs, text="Longitud:", font=("Segoe UI", 11)).grid(row=1, column=0, padx=5, pady=5, sticky="e")
+        entry_lon = ttk.Entry(frame_inputs, font=("Segoe UI", 11))
         entry_lon.grid(row=1, column=1, padx=5, pady=5)
         resultado_var = tk.StringVar()
-        resultado_label = ttk.Label(ventana, textvariable=resultado_var, font=("Segoe UI", 10), background="#f4f6f7")
-        resultado_label.pack(pady=10)
+        resultado_label = tk.Label(
+            ventana, textvariable=resultado_var, font=("Segoe UI", 12), bg="#e3f0fa", fg="#222"
+        )
+        resultado_label.pack(pady=15)
         # Función que se ejecuta al presionar "Buscar"
         def buscar():
             try:
@@ -114,12 +128,23 @@ def crear_interfaz():
                 messagebox.showerror("Error", "Ingrese valores válidos para latitud y longitud.")
                 return
             servidores = servidores_mas_cercanos(servidor_central, lat, lon)
-            resultado = "\n".join([f"{i+1}. {s.nombre} (Lat: {s.latitud}, Lon: {s.longitud})" for i, s in enumerate(servidores)])
+            resultado = "\n".join([
+                f"🌍 {i+1}. {s.nombre} (Lat: {s.latitud}, Lon: {s.longitud})"
+                for i, s in enumerate(servidores)
+            ])
             resultado_var.set(f"Servidores más cercanos:\n{resultado}")
             historial.append(f"Usuario en ({lat}, {lon}) → {[s.nombre for s in servidores]}")
             actualizar_historial()
-        ttk.Button(ventana, text="Buscar", command=buscar).pack(pady=5)
-        ttk.Button(ventana, text="Volver al Menú", command=mostrar_menu_principal).pack(pady=5)
+        tk.Button(
+            ventana, text="Buscar", command=buscar, font=("Segoe UI", 11, "bold"),
+            bg="#1976d2", fg="white", activebackground="#1565c0", activeforeground="white",
+            relief="raised", bd=2, cursor="hand2", width=15
+        ).pack(pady=5)
+        tk.Button(
+            ventana, text="Volver al Menú", command=mostrar_menu_principal, font=("Segoe UI", 11),
+            bg="#bdbdbd", fg="#222", activebackground="#757575", activeforeground="white",
+            relief="raised", bd=2, cursor="hand2", width=15
+        ).pack(pady=5)
 
     # ---- Pantalla para buscar un servidor por su nombre ----
     def mostrar_busqueda_nombre():
@@ -127,45 +152,73 @@ def crear_interfaz():
             widget.destroy()
         encabezado = tk.Label(
             ventana,
-            text="\nBuscar Servidor por Nombre\n",
-            font=("Segoe UI", 14, "bold"), bg="#f4f6f7"
+            text="Buscar Servidor por Nombre",
+            font=("Segoe UI", 15, "bold"), bg="#e3f0fa", fg="#388e3c"
         )
-        encabezado.pack(pady=5)
-        frame_inputs = tk.Frame(ventana, bg="#f4f6f7")
+        encabezado.pack(pady=10)
+        frame_inputs = tk.Frame(ventana, bg="#e3f0fa")
         frame_inputs.pack(pady=10)
-        ttk.Label(frame_inputs, text="Nombre del servidor:").grid(row=0, column=0, padx=5, pady=5)
-        entry_nombre = ttk.Entry(frame_inputs)
+        ttk.Label(frame_inputs, text="Nombre del servidor:", font=("Segoe UI", 11)).grid(row=0, column=0, padx=5, pady=5, sticky="e")
+        entry_nombre = ttk.Entry(frame_inputs, font=("Segoe UI", 11))
         entry_nombre.grid(row=0, column=1, padx=5, pady=5)
         resultado_var = tk.StringVar()
-        resultado_label = ttk.Label(ventana, textvariable=resultado_var, font=("Segoe UI", 10), background="#f4f6f7")
-        resultado_label.pack(pady=10)
+        resultado_label = tk.Label(
+            ventana, textvariable=resultado_var, font=("Segoe UI", 12), bg="#e3f0fa", fg="#222"
+        )
+        resultado_label.pack(pady=15)
         # Función que se ejecuta al presionar "Buscar"
         def buscar():
             nombre = entry_nombre.get()
             encontrados = buscar_por_nombre(servidor_central, nombre)
             if not encontrados:
-                resultado_var.set("Servidor no encontrado.")
+                resultado_var.set("❌ Servidor no encontrado.")
             else:
                 servidor = encontrados[0]
                 ruta = obtener_ruta(servidor)
-                resultado_var.set(f"Nombre: {servidor.nombre}\nLatitud: {servidor.latitud}\nLongitud: {servidor.longitud}\nRuta: {ruta}")
-        ttk.Button(ventana, text="Buscar", command=buscar).pack(pady=5)
-        ttk.Button(ventana, text="Volver al Menú", command=mostrar_menu_principal).pack(pady=5)
+                resultado_var.set(
+                    f"✅ Nombre: {servidor.nombre}\n"
+                    f"📍 Latitud: {servidor.latitud}\n"
+                    f"📍 Longitud: {servidor.longitud}\n"
+                    f"🛣️ Ruta: {ruta}"
+                )
+        tk.Button(
+            ventana, text="Buscar", command=buscar, font=("Segoe UI", 11, "bold"),
+            bg="#388e3c", fg="white", activebackground="#1b5e20", activeforeground="white",
+            relief="raised", bd=2, cursor="hand2", width=15
+        ).pack(pady=5)
+        tk.Button(
+            ventana, text="Volver al Menú", command=mostrar_menu_principal, font=("Segoe UI", 11),
+            bg="#bdbdbd", fg="#222", activebackground="#757575", activeforeground="white",
+            relief="raised", bd=2, cursor="hand2", width=15
+        ).pack(pady=5)
 
     # ---- Pantalla para mostrar el árbol de servidores en forma jerárquica ----
     def mostrar_arbol_servidores():
         for widget in ventana.winfo_children():
             widget.destroy()
-        tk.Label(ventana, text="\nÁrbol de Servidores\n", font=("Segoe UI", 14, "bold"), bg="#f4f6f7").pack()
-        tree_frame = ttk.Frame(ventana)
+        tk.Label(
+            ventana, text="Árbol de Servidores", font=("Segoe UI", 15, "bold"),
+            bg="#e3f0fa", fg="#ffa726"
+        ).pack(pady=10)
+        tree_frame = tk.Frame(ventana, bg="#e3f0fa")
         tree_frame.pack(pady=10, fill="both", expand=True)
-        tree = ttk.Treeview(tree_frame, columns=("Latitud", "Longitud"))
+        style = ttk.Style()
+        style.configure("Treeview", font=("Segoe UI", 11), rowheight=28)
+        style.configure("Treeview.Heading", font=("Segoe UI", 11, "bold"))
+        tree = ttk.Treeview(tree_frame, columns=("Latitud", "Longitud"), selectmode="browse")
         tree.heading("#0", text="Servidor")
         tree.heading("Latitud", text="Latitud")
         tree.heading("Longitud", text="Longitud")
+        tree.column("#0", width=180)
+        tree.column("Latitud", width=100, anchor="center")
+        tree.column("Longitud", width=100, anchor="center")
         tree.pack(fill="both", expand=True)
         mostrar_arbol(tree, servidor_central)
-        ttk.Button(ventana, text="Volver al Menú", command=mostrar_menu_principal).pack(pady=5)
+        tk.Button(
+            ventana, text="Volver al Menú", command=mostrar_menu_principal, font=("Segoe UI", 11),
+            bg="#bdbdbd", fg="#222", activebackground="#757575", activeforeground="white",
+            relief="raised", bd=2, cursor="hand2", width=15
+        ).pack(pady=10)
 
     # ---- Muestra el historial de búsquedas en la consola ----
     def actualizar_historial():
@@ -176,13 +229,14 @@ def crear_interfaz():
     # ---- Configuración de la ventana principal ----
     ventana = tk.Tk()
     ventana.title("Sistema de CDN")
-    ventana.geometry("700x500")
-    ventana.configure(bg="#f4f6f7")
+    ventana.geometry("750x540")
+    ventana.configure(bg="#e3f0fa")
+    ventana.resizable(False, False)
     estilo = ttk.Style()
     estilo.theme_use("clam")
-    estilo.configure("TFrame", background="#f4f6f7")
-    estilo.configure("TButton", font=("Segoe UI", 10), padding=6)
-    estilo.configure("TLabel", font=("Segoe UI", 10), background="#f4f6f7")
+    estilo.configure("TFrame", background="#e3f0fa")
+    estilo.configure("TButton", font=("Segoe UI", 11), padding=6)
+    estilo.configure("TLabel", font=("Segoe UI", 11), background="#e3f0fa")
     mostrar_menu_principal()
     ventana.mainloop()
 
