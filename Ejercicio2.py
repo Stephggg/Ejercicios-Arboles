@@ -21,19 +21,18 @@ class Directorio(ElementoFS):
     def agregar(self, elemento):
         self.hijos.append(elemento)  # Agrega un hijo al directorio
 
-# Busca la ruta completa de un archivo dado su nombre, recorriendo el árbol desde la raíz
-def buscar_ruta_archivo(raiz, nombre_archivo, ruta_actual=""):
-    if isinstance(raiz, Archivo):  # Si el nodo es un archivo
-        if raiz.nombre == nombre_archivo:  # Si el nombre coincide
-            return ruta_actual + "/" + raiz.nombre  # Devuelve la ruta completa
-        else:
-            return None  # No es el archivo buscado
-    elif isinstance(raiz, Directorio):  # Si el nodo es un directorio
-        for hijo in raiz.hijos:  # Recorre todos los hijos
-            resultado = buscar_ruta_archivo(hijo, nombre_archivo, ruta_actual + "/" + raiz.nombre)
-            if resultado:  # Si se encontró el archivo en algún hijo
+# Busca la ruta completa de un elemento (archivo o directorio) dado su nombre, recorriendo el árbol desde la raíz
+def buscar_ruta_elemento(raiz, nombre_elemento, ruta_actual=""):
+    # Si el nodo actual coincide con el nombre buscado (ya sea archivo o directorio)
+    if raiz.nombre == nombre_elemento:
+        return ruta_actual + "/" + raiz.nombre if raiz.nombre else "/"
+    # Si es un directorio, buscar recursivamente en sus hijos
+    if isinstance(raiz, Directorio):
+        for hijo in raiz.hijos:
+            resultado = buscar_ruta_elemento(hijo, nombre_elemento, ruta_actual + "/" + raiz.nombre)
+            if resultado:
                 return resultado
-    return None  # No se encontró el archivo en este subárbol
+    return None
 
 # Llena el widget Treeview con la estructura del árbol de directorios y archivos
 def llenar_treeview(tree, nodo, padre=""):
@@ -50,11 +49,11 @@ def llenar_treeview(tree, nodo, padre=""):
 # Función que se ejecuta al presionar el botón "Buscar"
 def buscar_archivo_gui():
     nombre = entry_nombre.get()  # Obtiene el nombre del archivo ingresado por el usuario
-    ruta = buscar_ruta_archivo(raiz, nombre)  # Busca la ruta del archivo
+    ruta = buscar_ruta_elemento(raiz, nombre)  # Busca la ruta del archivo
     if ruta:
         messagebox.showinfo("Resultado", f"Ruta encontrada:\n{ruta}")  # Muestra la ruta encontrada
     else:
-        messagebox.showwarning("Resultado", "Archivo no encontrado.")  # Muestra advertencia si no se encuentra
+        messagebox.showwarning("Resultado", "Elemento no encontrado.")  # Muestra advertencia si no se encuentra
 
 # Ejemplo de uso:
 if __name__ == "__main__":
