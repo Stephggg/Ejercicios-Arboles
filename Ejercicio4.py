@@ -28,8 +28,8 @@ def encontrar_ancestros(persona, generacion):
     ancestros = []
     for p in [persona.padre, persona.madre]:
         if p:
-            ancestros.extend(encontrar_ancestros(p, generacion - 1))
-    return ancestros
+            ancestros.extend(encontrar_ancestros(p, generacion - 1))  #-1 es # para ir hacia arriba en el árbol
+    return ancestros # extend sirve para añadir los elementos de una lista a otra
 
 # Clase principal para la interfaz gráfica
 class ArbolGenealogicoApp(tk.Tk):
@@ -124,9 +124,6 @@ class ArbolGenealogicoApp(tk.Tk):
         if not nombre:
             messagebox.showerror("Error", "El nombre no puede estar vacío.")
             return
-        if nombre in self.personas:
-            messagebox.showerror("Error", "Ya existe una persona con ese nombre.")
-            return
         if padre_nombre == madre_nombre and padre_nombre != "":
             messagebox.showerror("Error", "Padre y madre no pueden ser la misma persona.")
             return
@@ -135,16 +132,23 @@ class ArbolGenealogicoApp(tk.Tk):
         padre = self.personas.get(padre_nombre) if padre_nombre else None
         madre = self.personas.get(madre_nombre) if madre_nombre else None
 
-        # Crea la nueva persona y la agrega al diccionario
-        nueva_persona = Persona(nombre, padre, madre)
-        self.personas[nombre] = nueva_persona
+        if nombre in self.personas:
+            # Si la persona ya existe, actualiza sus padres
+            persona = self.personas[nombre]
+            persona.padre = padre
+            persona.madre = madre
+            messagebox.showinfo("Actualizado", f"Padres de '{nombre}' actualizados correctamente.")
+        else:
+            # Crea la nueva persona y la agrega al diccionario
+            nueva_persona = Persona(nombre, padre, madre)
+            self.personas[nombre] = nueva_persona
+            messagebox.showinfo("Éxito", f"Persona '{nombre}' agregada correctamente.")
 
         # Limpia los campos y actualiza los combobox
         self.entrada_nombre.delete(0, tk.END)
         self.combo_padre.set("")
         self.combo_madre.set("")
         self.actualizar_comboboxes()
-        messagebox.showinfo("Éxito", f"Persona '{nombre}' agregada correctamente.")
 
     def buscar_ancestros(self):
         # Obtiene la persona y la generación seleccionada
